@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	<!-- Switch on the Caching -->
+	<cache:annotation-driven />
+
+	<!-- Do the component scan path -->
+	<context:component-scan base-package="test.cache.ehcache3" />
+	
+	<!-- Create bean reference or have @Repository("refDataService") in RefData.java -->
+	<!-- <bean id="refDataService" class="test.cache.ehcache3.RefData" /> -->
+
+	<!-- Configure Service that want to make cacheable. Configuration can also be setup 
+	without the need of Annotation or cases where Annotations cannot be used -->
+	<!-- 	
+	<bean id="movieService" class="com.cache.movie.MovieService" />
+
+	<cache:advice id="cacheAdvice" cache-manager="cacheManager">
+		<cache:caching cache="books">
+			<cache:cacheable method="findBook" key="#isbn" />
+			<cache:cache-evict method="loadBooks" all-entries="true" />
+		</cache:caching>
+	</cache:advice>
+
+	<aop:config>
+		<aop:advisor advice-ref="cacheAdvice"
+			pointcut="execution(* x.y.BookService.*(..))" />
+	</aop:config>
+ 	-->
+
+	<!-- JSR 107: Cache manager definition & Libaray Setup -->
+
+	<bean id="cacheManager" class="org.springframework.cache.jcache.JCacheCacheManager"
+		p:cacheManager-ref="ehcache" />
+
+	<bean id="ehcache"
+		class="org.springframework.cache.jcache.JCacheManagerFactoryBean"
+		p:cacheManagerUri="classpath:ehcache-simple-anno.xml" />
+	
+	<!-- Ehcache based setup: Cache manager and Library Setup  -->
+	<!-- 
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
+	p:cache-manager-ref="ehcache" />
+
+	
+	<bean id="ehcache"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+		p:config-location="ehcache.xml" />
+		
+	 -->			
+		
+</beans>
